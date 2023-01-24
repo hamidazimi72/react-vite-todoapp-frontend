@@ -8,7 +8,7 @@ axios.defaults.timeout = 10000;
 
 export const fetchAllTasks = (okCB = null) => {
   axios
-    .get(`${baseURL}/fetch/all`)
+    .get(`${baseURL}/tasks`)
     .then((res) => {
       if (res?.data?.resultCode === 1) {
         okCB && okCB(res?.data?.info);
@@ -19,7 +19,7 @@ export const fetchAllTasks = (okCB = null) => {
 
 export const addTask = (okCB = null, { title, completed }) => {
   axios
-    .post(`${baseURL}/task/save`, { title, completed })
+    .post(`${baseURL}/tasks`, { title, completed })
     .then((res) => {
       if (res?.data?.resultCode === 1) {
         okCB && okCB();
@@ -28,9 +28,9 @@ export const addTask = (okCB = null, { title, completed }) => {
     .catch((err) => console.log(err));
 };
 
-export const editTask = (okCB = null, { taskId, title }) => {
+export const editTask = (okCB = null, { taskId, title, completed }) => {
   axios
-    .post(`${baseURL}/task/update`, { taskId, title })
+    .put(`${baseURL}/tasks/${taskId}`, { title, completed })
     .then((res) => {
       if (res?.data?.resultCode === 1) {
         okCB && okCB();
@@ -39,20 +39,10 @@ export const editTask = (okCB = null, { taskId, title }) => {
     .catch((err) => console.log(err));
 };
 
-export const toggleTask = (okCB = null, { taskId }) => {
+export const deleteTask = (okCB = null, { id }) => {
+  console.log(id);
   axios
-    .post(`${baseURL}/task/toggle`, { taskId })
-    .then((res) => {
-      if (res?.data?.resultCode === 1) {
-        okCB && okCB();
-      }
-    })
-    .catch((err) => console.log(err));
-};
-
-export const deleteTask = (okCB = null, { taskId }) => {
-  axios
-    .post(`${baseURL}/task/delete`, { taskId })
+    .delete(`${baseURL}/tasks/${id}`)
     .then((res) => {
       if (res?.data?.resultCode === 1) {
         okCB && okCB();

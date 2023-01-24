@@ -5,7 +5,7 @@ import {
   deleteTask,
   editTask,
   fetchAllTasks,
-  toggleTask,
+  // toggleTask,
 } from "../../../services";
 
 export const App = () => {
@@ -31,19 +31,25 @@ export const App = () => {
     const newTitle = window.prompt("Enter new title:", item?.title);
     if (!newTitle) return;
 
-    editTask(fetchAllTasksHandler, { taskId: item?.id, title: newTitle });
+    editTask(fetchAllTasksHandler, {
+      taskId: item?.id,
+      title: newTitle,
+      completed: item?.completed,
+    });
   };
 
   const toggleTaskHandler = (item) => {
-    toggleTask(fetchAllTasksHandler, {
+    editTask(fetchAllTasksHandler, {
       taskId: item?.id,
+      title: item?.title,
+      completed: !item?.completed,
     });
   };
 
   const deleteTaskHandler = (item) => {
     if (window.confirm("Are you sure?")) {
       deleteTask(fetchAllTasksHandler, {
-        taskId: item?.id,
+        id: item?.id,
       });
     }
   };
