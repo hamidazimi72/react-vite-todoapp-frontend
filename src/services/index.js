@@ -5,13 +5,25 @@ import { BASEURI, PORT, PROTOCOL } from "./host";
 const baseURL = `${PROTOCOL}://${BASEURI}:${PORT}`;
 
 axios.defaults.timeout = 10000;
+axios.defaults.baseURL = baseURL;
 
-export const fetchAllTasks = (okCB = null) => {
+export const fetchAllTasks = (
+  { page, limit, status, search },
+  { okCB = null }
+) => {
   axios
-    .get(`${baseURL}/tasks`)
+    .get(
+      `/tasks?page=${page}&limit=${limit}&iscompleted=${status}${
+        search ? `&search=${search}` : ``
+      }`
+    )
     .then((res) => {
       if (res?.data?.resultCode === 1) {
-        okCB && okCB(res?.data?.info);
+        okCB &&
+          okCB({
+            list: res?.data?.info?.tasks,
+            totalCount: res?.data?.info?.totalCount,
+          });
       }
     })
     .catch((err) => console.log(err));
@@ -19,7 +31,7 @@ export const fetchAllTasks = (okCB = null) => {
 
 export const addTask = (okCB = null, { title, completed }) => {
   axios
-    .post(`${baseURL}/tasks`, { title, completed })
+    .post(`/tasks`, { title, completed })
     .then((res) => {
       if (res?.data?.resultCode === 1) {
         okCB && okCB();
@@ -30,7 +42,7 @@ export const addTask = (okCB = null, { title, completed }) => {
 
 export const editTask = (okCB = null, { taskId, title, completed }) => {
   axios
-    .put(`${baseURL}/tasks/${taskId}`, { title, completed })
+    .put(`/tasks/${taskId}`, { title, completed })
     .then((res) => {
       if (res?.data?.resultCode === 1) {
         okCB && okCB();
@@ -42,7 +54,7 @@ export const editTask = (okCB = null, { taskId, title, completed }) => {
 export const deleteTask = (okCB = null, { id }) => {
   console.log(id);
   axios
-    .delete(`${baseURL}/tasks/${id}`)
+    .delete(`/tasks/${id}`)
     .then((res) => {
       if (res?.data?.resultCode === 1) {
         okCB && okCB();
